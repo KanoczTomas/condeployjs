@@ -7,8 +7,9 @@
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="bundle.js"></script>
 </head>
-<body>
+<body ng-app="condeploy">
 
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
@@ -24,9 +25,11 @@
   </div>
 </nav>
 
-<div class="container">
+<div class="container" ng-controller="mainCtrl">
   <h1>My First Bootstrap Page</h1>
   <p>This is some text.</p>
+	<input ng-model="test">
+	{{test}}
 </div>
 
 </body>
