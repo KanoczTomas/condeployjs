@@ -1,0 +1,36 @@
+{
+  "name": "condeployjs",
+  "version": "1.0.0",
+  "description": "page helping with QoS deployment",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"watch": "watchify --poll=1000 js/app.js -o static/bundle.js -vvv"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KanoczTomas/condeployjs.git"
+  },
+  "keywords": [
+    "nodejs",
+    "QoS",
+    "deploy",
+    "snmp"
+  ],
+  "author": "Tomas Kanocz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KanoczTomas/condeployjs/issues"
+  },
+  "homepage": "https://github.com/KanoczTomas/condeployjs#readme",
+  "dependencies": {
+    "body": "^5.1.0",
+    "express": "^4.14.0"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.1",
+    "morgan": "^1.7.0",
+    "should": "^9.0.2",
+    "watchify": "^3.7.0"
+  }
+}

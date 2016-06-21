@@ -1,0 +1,27 @@
+{
+  "name": "condeployjs",
+  "description": "page helping with QoS deployment",
+  "main": "server.js",
+  "authors": [
+    "Tomas Kanocz"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "nodejs",
+    "QoS",
+    "deploy",
+    "snmp"
+  ],
+  "homepage": "https://github.com/KanoczTomas/condeployjs",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.7"
+  }
+}
