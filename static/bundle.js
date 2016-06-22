@@ -31497,8 +31497,33 @@ app.controller("mainCtrl",require("./mainCtrl"));
 //module.exports = app;
 
 },{"../../config.js":2,"./../../bower_components/angular/angular.js":1,"./mainCtrl":5}],5:[function(require,module,exports){
-module.exports = ['$scope', function($scope){
-	$scope.test = "test";
+var apiResponse  = require("../models/apiResponse");
+
+module.exports = ['$scope', '$http', function($scope, $http){
+  $scope.request = {};
+	$scope.oid = ".1.3.6.1.2.1.1.1.0";
+	$scope.ip = "ip";
+	$scope.community = "community";
+	$scope.request.oid = $scope.oid;
+	$scope.request.ip = $scope.ip;
+	$scope.snmp = function(){
+		var ip = $scope.ip;
+		var oid = $scope.oid;
+		$scope.out = new apiResponse();
+		$http.get("api/v1.0/" + ip + "/" + oid)
+		.success(function(res){
+		  $scope.out = res;
+		});
+	}
 }];
+
+},{"../models/apiResponse":6}],6:[function(require,module,exports){
+module.exports = function apiResponse(){
+	this.version = "1.0";
+	this.status = "in progress";
+	this.request = {};
+	this.errors = [];
+	this.data = {};
+}
 
 },{}]},{},[3]);

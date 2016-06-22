@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "watchify --poll=1000 js/app.js -o static/bundle.js -vvv",
+    "watch": "watchify js/app.js -o static/bundle.js -vvv",
+    "build": "browserify js/app.js | uglifyjs -mc warnings=false > static/bundle.min.js",
     "start": "nodemon -w server.js"
   },
   "repository": {
@@ -26,18 +27,22 @@
   "homepage": "https://github.com/KanoczTomas/condeployjs#readme",
   "dependencies": {
     "body": "^5.1.0",
-    "express": "^4.14.0"
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "snmp-native": "^1.0.21",
+    "uglify-js": "^2.6.4"
   },
   "devDependencies": {
     "browserify": "^13.0.1",
     "debowerify": "^1.5.0",
     "morgan": "^1.7.0",
     "should": "^9.0.2",
+    "uglify": "^0.1.5",
     "watchify": "^3.7.0"
   },
-	"browserify":{
-		"transform":[
-			"debowerify"
-		]
-	}
+  "browserify": {
+    "transform": [
+      "debowerify"
+    ]
+  }
 }

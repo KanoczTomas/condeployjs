@@ -28,8 +28,14 @@
 <div class="container" ng-controller="mainCtrl">
   <h1>My First Bootstrap Page</h1>
   <p>This is some text.</p>
-	<input ng-model="test">
-	{{test}}
+	<input type="text" ng-model="ip">
+	<input type="text" ng-model="community">
+	<input type="text" ng-model="oid">
+	<button ng-click="snmp()" class="btn btn-success">snmp</button>
+	<h1>Results</h1>
+	<div class="jumbotron">
+		<pre>{{out | json}}</pre>
+	</div>
 </div>
 
 </body>
