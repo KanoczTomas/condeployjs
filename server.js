@@ -5,6 +5,7 @@ var morgan = require("morgan");
 var snmp = require("snmp-native");
 var bodyParser = require("body-parser");
 var apiResponse = require("./js/models/apiResponse");
+var extend = require("extend");
 
 app.listen(config.port);
 app.use(morgan("dev"));
@@ -17,6 +18,7 @@ app.get('/api/v1.0/:ip/:oid', function(req, res){
 	var ip = req.params.ip;
 	var oid  = req.params.oid;
 	var response = new apiResponse();
+	extend(response.request,req.params);
 	try {
 		var session = new snmp.Session({host: ip, community: "secret"});
 	}

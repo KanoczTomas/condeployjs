@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "watchify js/app.js -o static/bundle.js -vvv",
+    "watch": "watchify js/app.js --poll=1000 -o static/bundle.js -vvv",
     "build": "browserify js/app.js | uglifyjs -mc warnings=false > static/bundle.min.js",
     "start": "nodemon -w server.js"
   },
@@ -29,6 +29,7 @@
     "body": "^5.1.0",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "extend": "^3.0.0",
     "snmp-native": "^1.0.21",
     "uglify-js": "^2.6.4"
   },

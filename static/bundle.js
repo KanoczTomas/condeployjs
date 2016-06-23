@@ -31498,26 +31498,24 @@ app.controller("mainCtrl",require("./mainCtrl"));
 
 },{"../../config.js":2,"./../../bower_components/angular/angular.js":1,"./mainCtrl":5}],5:[function(require,module,exports){
 var apiResponse  = require("../models/apiResponse");
+var extend = require('extend');
 
 module.exports = ['$scope', '$http', function($scope, $http){
-  $scope.request = {};
-	$scope.oid = ".1.3.6.1.2.1.1.1.0";
-	$scope.ip = "ip";
-	$scope.community = "community";
-	$scope.request.oid = $scope.oid;
-	$scope.request.ip = $scope.ip;
+	$scope.request = {
+		oid : ".1.3.6.1.2.1.1.1.0",
+		ip : "ip",
+		community : "community"
+	};
 	$scope.snmp = function(){
-		var ip = $scope.ip;
-		var oid = $scope.oid;
 		$scope.out = new apiResponse();
-		$http.get("api/v1.0/" + ip + "/" + oid)
+		$http.get("api/v1.0/" + $scope.request.ip + "/" + $scope.request.oid)
 		.success(function(res){
-		  $scope.out = res;
+		  extend($scope.out,res);
 		});
 	}
 }];
 
-},{"../models/apiResponse":6}],6:[function(require,module,exports){
+},{"../models/apiResponse":6,"extend":7}],6:[function(require,module,exports){
 module.exports = function apiResponse(){
 	this.version = "1.0";
 	this.status = "in progress";
@@ -31525,5 +31523,93 @@ module.exports = function apiResponse(){
 	this.errors = [];
 	this.data = {};
 }
+
+},{}],7:[function(require,module,exports){
+'use strict';
+
+var hasOwn = Object.prototype.hasOwnProperty;
+var toStr = Object.prototype.toString;
+
+var isArray = function isArray(arr) {
+	if (typeof Array.isArray === 'function') {
+		return Array.isArray(arr);
+	}
+
+	return toStr.call(arr) === '[object Array]';
+};
+
+var isPlainObject = function isPlainObject(obj) {
+	if (!obj || toStr.call(obj) !== '[object Object]') {
+		return false;
+	}
+
+	var hasOwnConstructor = hasOwn.call(obj, 'constructor');
+	var hasIsPrototypeOf = obj.constructor && obj.constructor.prototype && hasOwn.call(obj.constructor.prototype, 'isPrototypeOf');
+	// Not own constructor property must be Object
+	if (obj.constructor && !hasOwnConstructor && !hasIsPrototypeOf) {
+		return false;
+	}
+
+	// Own properties are enumerated firstly, so to speed up,
+	// if last one is own, then all properties are own.
+	var key;
+	for (key in obj) {/**/}
+
+	return typeof key === 'undefined' || hasOwn.call(obj, key);
+};
+
+module.exports = function extend() {
+	var options, name, src, copy, copyIsArray, clone,
+		target = arguments[0],
+		i = 1,
+		length = arguments.length,
+		deep = false;
+
+	// Handle a deep copy situation
+	if (typeof target === 'boolean') {
+		deep = target;
+		target = arguments[1] || {};
+		// skip the boolean and the target
+		i = 2;
+	} else if ((typeof target !== 'object' && typeof target !== 'function') || target == null) {
+		target = {};
+	}
+
+	for (; i < length; ++i) {
+		options = arguments[i];
+		// Only deal with non-null/undefined values
+		if (options != null) {
+			// Extend the base object
+			for (name in options) {
+				src = target[name];
+				copy = options[name];
+
+				// Prevent never-ending loop
+				if (target !== copy) {
+					// Recurse if we're merging plain objects or arrays
+					if (deep && copy && (isPlainObject(copy) || (copyIsArray = isArray(copy)))) {
+						if (copyIsArray) {
+							copyIsArray = false;
+							clone = src && isArray(src) ? src : [];
+						} else {
+							clone = src && isPlainObject(src) ? src : {};
+						}
+
+						// Never move original objects, clone them
+						target[name] = extend(deep, clone, copy);
+
+					// Don't bring in undefined values
+					} else if (typeof copy !== 'undefined') {
+						target[name] = copy;
+					}
+				}
+			}
+		}
+	}
+
+	// Return the modified object
+	return target;
+};
+
 
 },{}]},{},[3]);

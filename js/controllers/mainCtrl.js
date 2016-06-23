@@ -1,19 +1,17 @@
 var apiResponse  = require("../models/apiResponse");
+var extend = require('extend');
 
 module.exports = ['$scope', '$http', function($scope, $http){
-  $scope.request = {};
-	$scope.oid = ".1.3.6.1.2.1.1.1.0";
-	$scope.ip = "ip";
-	$scope.community = "community";
-	$scope.request.oid = $scope.oid;
-	$scope.request.ip = $scope.ip;
+	$scope.request = {
+		oid : ".1.3.6.1.2.1.1.1.0",
+		ip : "ip",
+		community : "community"
+	};
 	$scope.snmp = function(){
-		var ip = $scope.ip;
-		var oid = $scope.oid;
 		$scope.out = new apiResponse();
-		$http.get("api/v1.0/" + ip + "/" + oid)
+		$http.get("api/v1.0/" + $scope.request.ip + "/" + $scope.request.oid)
 		.success(function(res){
-		  $scope.out = res;
+		  extend($scope.out,res);
 		});
 	}
 }];
