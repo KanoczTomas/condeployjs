@@ -36067,14 +36067,7 @@ var app = angular.module(config.appName,
 require("./controllers");
 app.config(require("./states"));
 
-},{"../config":3,"./..\\bower_components\\angular-ui-router\\release\\angular-ui-router.js":1,"./..\\bower_components\\angular\\angular.js":2,"./controllers":5,"./states":8}],5:[function(require,module,exports){
-require("./..\\..\\bower_components\\angular\\angular.js");
-var config = require("../../config.js");
-var app = angular.module(config.appName);
-app.controller("mainCtrl",require("./mainCtrl"));
-//module.exports = app;
-
-},{"../../config.js":3,"./..\\..\\bower_components\\angular\\angular.js":2,"./mainCtrl":6}],6:[function(require,module,exports){
+},{"../config":3,"./..\\bower_components\\angular-ui-router\\release\\angular-ui-router.js":1,"./..\\bower_components\\angular\\angular.js":2,"./controllers":6,"./states":9}],5:[function(require,module,exports){
 var apiResponse  = require("../models/apiResponse");
 var extend = require('extend');
 
@@ -36093,7 +36086,16 @@ module.exports = ['$scope', '$http', function($scope, $http){
 	}
 }];
 
-},{"../models/apiResponse":7,"extend":9}],7:[function(require,module,exports){
+},{"../models/apiResponse":8,"extend":10}],6:[function(require,module,exports){
+require("./..\\..\\bower_components\\angular\\angular.js");
+var config = require("../../config.js");
+var app = angular.module(config.appName);
+app.controller("mainCtrl",require("./mainCtrl"));
+//module.exports = app;
+
+},{"../../config.js":3,"./..\\..\\bower_components\\angular\\angular.js":2,"./mainCtrl":7}],7:[function(require,module,exports){
+arguments[4][5][0].apply(exports,arguments)
+},{"../models/apiResponse":8,"dup":5,"extend":10}],8:[function(require,module,exports){
 module.exports = function apiResponse(){
 	this.version = "1.0";
 	this.status = "in progress";
@@ -36102,22 +36104,22 @@ module.exports = function apiResponse(){
 	this.data = {};
 }
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 module.exports = [ "$stateProvider", "$urlRouterProvider", function($stateProvider, $urlRouterProvider) { 
     $urlRouterProvider.otherwise("/discover");
 
     $stateProvider
         .state("discover", {
             url: "/discover",
-            templateUrl: "/templates/discover.html"//,
-			//controller: require('./controllers/')
+            templateUrl: "/templates/discover.html",
+			controller: require('./controllers/discoverCtrl')
         })
         .state("devices", {
             url: "/devices",
             template: "Here will be a list of devices with ports marked as trusted and filtering per model, etc.",
         });
 }];
-},{}],9:[function(require,module,exports){
+},{"./controllers/discoverCtrl":5}],10:[function(require,module,exports){
 'use strict';
 
 var hasOwn = Object.prototype.hasOwnProperty;

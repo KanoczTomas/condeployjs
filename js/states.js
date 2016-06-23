@@ -4,8 +4,8 @@ module.exports = [ "$stateProvider", "$urlRouterProvider", function($stateProvid
     $stateProvider
         .state("discover", {
             url: "/discover",
-            templateUrl: "/templates/discover.html"//,
-			//controller: require('./controllers/')
+            templateUrl: "/templates/discover.html",
+			controller: require('./controllers/discoverCtrl')
         })
         .state("devices", {
             url: "/devices",
