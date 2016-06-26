@@ -5,5 +5,5 @@ var app = angular.module(config.appName,
 	[ require("angular-ui-router")
 	]
 );
-require("./controllers");
+//require("./controllers");
 app.config(require("./states"));

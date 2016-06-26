@@ -6,6 +6,7 @@ var snmp = require("snmp-native");
 var bodyParser = require("body-parser");
 var apiResponse = require("./js/models/apiResponse");
 var extend = require("extend");
+var finder = require("./js/utilities/crawl.js");
 
 app.listen(config.port);
 app.use(morgan("dev"));
@@ -17,6 +18,8 @@ app.use('/',express.static(__dirname + '/static'));
 app.get('/api/v1.0/:ip/:oid', function(req, res){
 	var ip = req.params.ip;
 	var oid  = req.params.oid;
+	var community = finder([ip]);
+	console.log(community);
 	var response = new apiResponse();
 	extend(response.request,req.params);
 	try {

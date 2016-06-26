@@ -26,10 +26,13 @@
   },
   "homepage": "https://github.com/KanoczTomas/condeployjs#readme",
   "dependencies": {
+    "async": "^2.0.0-rc.6",
+    "bluebird": "^3.4.1",
     "body": "^5.1.0",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "extend": "^3.0.0",
+    "rest-interface": "^1.0.1",
     "snmp-native": "^1.0.21",
     "uglify-js": "^2.6.4"
   },
