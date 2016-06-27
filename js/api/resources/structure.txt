@@ -1,0 +1,8 @@
+#method route => what is action when url hit ; type of returned/received data
+GET /devices => returns all devices ; list of objects
+GET /devices/:ip => returns device identified by ip ; object
+GET /devices/:ip/community => returns community for device ; string
+GET /devices/:ip/ports => returns ports ; list of objects
+GET /devices/:ip/discover => discovers device using snmp and adds to database ; null
+POST /devices/:ip/ports => receives new list of port objects, updates db ; list of objects 
+

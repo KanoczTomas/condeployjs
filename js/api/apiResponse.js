@@ -1,6 +1,6 @@
 function apiResponse(){
-	this.version = "1.0";
-	this.private = {}; //all variables unaccessible from outside directlt are here
+	this.version = "1.1";
+	this.private = {}; //all variables unaccessible from outside directly are here
 	this.status = "in progress";
 	this.request = {};
 	this.errors = [];
@@ -21,9 +21,8 @@ apiResponse.prototype = {
 		this.status = "success";
 	},
 	failed: function(){
-		this.status = "failed"
+		this.status = "failed";
 	}
 }
 
-
-module.exports = apiResponse;
+module.exports = new apiResponse();

@@ -32,6 +32,8 @@
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "extend": "^3.0.0",
+    "require-dir": "^0.3.0",
+    "require-dir-all": "^0.4.9",
     "rest-interface": "^1.0.1",
     "snmp-native": "^1.0.21",
     "uglify-js": "^2.6.4"
