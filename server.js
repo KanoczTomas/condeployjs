@@ -4,9 +4,10 @@ var config = require("./config");
 var morgan = require("morgan");
 var snmp = require("snmp-native");
 var bodyParser = require("body-parser");
-var apiResponse = require("./js/models/apiResponse");
+var apiResponse = require("./js/api/apiResponse");
 var extend = require("extend");
 var finder = require("./js/utilities/crawl.js");
+var resources = require("./js/api/resources");
 
 app.listen(config.port);
 app.use(morgan("dev"));
@@ -14,37 +15,18 @@ app.use(bodyParser.json());
 console.log("server running on port " + config.port);
 
 app.use('/',express.static(__dirname + '/static'));
-
-app.get('/api/v1.0/:ip/:oid', function(req, res){
-	var ip = req.params.ip;
-	var oid  = req.params.oid;
-	var community = finder([ip]);
-	console.log(community);
-	var response = new apiResponse();
-	extend(response.request,req.params);
-	try {
-		var session = new snmp.Session({host: ip, community: "secret"});
+app.use('/api', resources);
+app.use('/api', function(req, res){
+	console.log(apiResponse);
+	extend(apiResponse, res.apiResponse);
+	console.log(res.apiResponse);
+	apiResponse.request = {
+		url: req.url,
+		params: req.params
+	};
+	if(apiResponse.status === 'success'){
+		res.status(200).json(apiResponse);
 	}
-	catch(err){
-		response.errors.push(err.message);
-		response.status = "snmp session error";
-	}
-	try{
-	session.get({oid: oid}, function(error, varbinds){
-		if(error){
-			response.errors.push(error.message);
-			response.status = "snmp get value error";
-		}
-		else{
-			response.status = "success";
-			response.data = varbinds;
-		}
-		res.json(response);
-	});
-	}
-	catch(err) {
-		response.status = "snmp get error";
-		response.errors.push(err.message);
-		res.json(response);
-	}
+	else res.status(404).json(apiResponse);
 });
+

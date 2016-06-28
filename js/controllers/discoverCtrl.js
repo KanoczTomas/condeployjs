@@ -1,4 +1,4 @@
-var apiResponse  = require("../models/apiResponse");
+var apiResponse  = require("../api/apiResponse");
 var extend = require('extend');
 
 module.exports = ['$scope', '$http', function($scope, $http){
