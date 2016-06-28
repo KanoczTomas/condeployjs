@@ -58,8 +58,8 @@ module.exports = function(ip, community, filter){
 		else if(!(typeof(ip) === 'string' && typeof(community) === 'string')) {
 			reject(Error('Illegal first 2 arguments, must be of type \'string\''));
 	  }
+
 		var session = new snmp.Session({host: ip, community: community});
-		interfaces.length = 0;
 		session.getSubtree({oid: oid.ifaceDescription}, function(err, vars){
 			if(err) reject(err);
 			vars.forEach(function(ifdescr, index){
@@ -74,6 +74,7 @@ module.exports = function(ip, community, filter){
 				});
 				session.close();
 				if(filter){
+
 					if(Object.keys(filter).find(function(e){return e === 'description' || e === 'type'})){
 						for (attr in filter){
 							if(!(typeof(filter[attr]) === 'string')) reject(Error('Filter attribute \'' + attr + '\' not of type \'string\', it is of type \'' + typeof(filter[attr]) +  '\' instead!'));
