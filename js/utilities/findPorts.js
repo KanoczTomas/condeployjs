@@ -52,7 +52,12 @@ var ifaceTypeCodes = {
 var interfaces = [];
 
 module.exports = function(ip, community, filter){
+
 	return new Promise(function(resolve, reject){
+		if(!(ip || community)) reject(Error('Too few arguments'));
+		else if(!(typeof(ip) === 'string' && typeof(community) === 'string')) {
+			reject(Error('Illegal first 2 arguments, must be of type \'string\''));
+	  }
 		var session = new snmp.Session({host: ip, community: community});
 		interfaces.length = 0;
 		session.getSubtree({oid: oid.ifaceDescription}, function(err, vars){
@@ -69,12 +74,12 @@ module.exports = function(ip, community, filter){
 				});
 				session.close();
 				if(filter){
-					if(Object.keys(filter).find(function(e){return e === 'type' || e === 'decription'})){
+					if(Object.keys(filter).find(function(e){ return e === 'description' || e === 'type'})){
 						for (attr in filter){
-							if(!(typeof(filter[attr]) === 'string')) throw Error('Filter attribute \'' + attr + '\' not of type \'string\', it is of type \'' + typeof(filter[attr]) +  '\' instead!');
+							if(!(typeof(filter[attr]) === 'string')) reject(Error('Filter attribute \'' + attr + '\' not of type \'string\', it is of type \'' + typeof(filter[attr]) +  '\' instead!'));
 						}
 					}
-					else throw Error('Invalid filter object, has no attributes type or description');
+					else reject(Error('Invalid filter object, has no attributes type or description'));
 					filter.type =  new RegExp(filter.type);
 					filter.description =  new RegExp(filter.description);
 					var out = interfaces.filter(function(entry){return filter.type.test(entry.type) && filter.description.test(entry.description)});
