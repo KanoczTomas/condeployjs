@@ -1,3 +1,10 @@
+//returns a promise takes 3 args:
+// ip - ip of device
+// community - community string
+// filter { - filter object
+//   type: 'string',  - regular expression to filter out ports based on type
+//	 description: 'string' - regular expression to filter out ports based on description
+// }
 var snmp = require("snmp-native");
 var Promise = require("bluebird");
 
@@ -42,24 +49,38 @@ var ifaceTypeCodes = {
 	32: "frame-relay"
 }
 
-var interfaces = {};
+var interfaces = [];
 
-module.exports = function(ip, community){
+module.exports = function(ip, community, filter){
 	return new Promise(function(resolve, reject){
 		var session = new snmp.Session({host: ip, community: community});
+		interfaces.length = 0;
 		session.getSubtree({oid: oid.ifaceDescription}, function(err, vars){
 			if(err) reject(err);
 			vars.forEach(function(ifdescr, index){
-				interfaces[index + 1] = {}
-				interfaces[index + 1].description = ifdescr.value;
+				interfaces[index] = {}
+				interfaces[index].id = index + 1;
+				interfaces[index].description = ifdescr.value;
 			});
 			session.getSubtree({oid: oid.ifaceType}, function(err, vars){
 				if(err) reject(err);
 				vars.forEach(function(iftype, index){
-					interfaces[index + 1].type = ifaceTypeCodes[iftype.value * 1];
+					interfaces[index].type = ifaceTypeCodes[iftype.value * 1];
 				});
 				session.close();
-				resolve(interfaces);
+				if(filter){
+					if(Object.keys(filter).find(function(e){return e === 'type' || e === 'decription'})){
+						for (attr in filter){
+							if(!(typeof(filter[attr]) === 'string')) throw Error('Filter attribute \'' + attr + '\' not of type \'string\', it is of type \'' + typeof(filter[attr]) +  '\' instead!');
+						}
+					}
+					else throw Error('Invalid filter object, has no attributes type or description');
+					filter.type =  new RegExp(filter.type);
+					filter.description =  new RegExp(filter.description);
+					var out = interfaces.filter(function(entry){return filter.type.test(entry.type) && filter.description.test(entry.description)});
+					resolve(out);
+				}
+				else resolve(interfaces);
 			});
 		});
 	});
