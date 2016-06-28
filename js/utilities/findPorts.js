@@ -74,12 +74,13 @@ module.exports = function(ip, community, filter){
 				});
 				session.close();
 				if(filter){
-					if(Object.keys(filter).find(function(e){ return e === 'description' || e === 'type'})){
+					if(Object.keys(filter).find(function(e){return e === 'description' || e === 'type'})){
 						for (attr in filter){
 							if(!(typeof(filter[attr]) === 'string')) reject(Error('Filter attribute \'' + attr + '\' not of type \'string\', it is of type \'' + typeof(filter[attr]) +  '\' instead!'));
 						}
 					}
 					else reject(Error('Invalid filter object, has no attributes type or description'));
+
 					filter.type =  new RegExp(filter.type);
 					filter.description =  new RegExp(filter.description);
 					var out = interfaces.filter(function(entry){return filter.type.test(entry.type) && filter.description.test(entry.description)});

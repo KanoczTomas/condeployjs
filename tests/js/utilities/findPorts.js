@@ -1,5 +1,6 @@
 var should = require("should");
 var findPorts = require("../../../js/utilities/findPorts");
+var _ = require("underscore");
 
 var testIP = '192.168.2.1';
 var testCommunity = 'secret';
@@ -57,31 +58,42 @@ describe('Tests for findPorts.js - in case tests are failing please make sure yo
 		});
 	});
 	it('should give back only ethernet ports (filter{type : \'ether\'})',function(done){
-		var lenToVerify;
+		var arrayToVerify;
 		findPorts(testIP, testCommunity).
 		then(function(ports){
-			lenToVerify = ports.filter(function(e){return /ether/.test(e.type)}).length;
+			arrayToVerify = ports.filter(function(e){return /ether/.test(e.type)});
 			return findPorts(testIP, testCommunity, {type: 'ether'})
 		}).
 		then(function(ports){
-			var lenReturned = ports.length;
-			lenReturned.should.be.equal(lenToVerify);
+			_.isEqual(arrayToVerify,ports).should.be.true();
 			done();
 		});
 	}).timeout(4000);
 	it('should give back only ports named vlan (filter{desription: \'vlan\'})',function(done){
-		var lenToVerify;
+		var arrayToVerify;
 		findPorts(testIP, testCommunity).
 		then(function(ports){
-			lenToVerify = ports.filter(function(e){return /vlan/.test(e.description)}).length;
+			arrayToVerify = ports.filter(function(e){return /vlan/.test(e.description)});
 			return findPorts(testIP, testCommunity, {description: 'vlan'})
 		}).
 		then(function(ports){
-			var lenReturned = ports.length;
-			lenReturned.should.be.equal(lenToVerify);
+			_.isEqual(arrayToVerify,ports).should.be.true();
 			done();
 		});
 	});
-	it('should give back only ports named loop and type software (filter{type: \'software\', description: \'lo\'})');
+	it('should give back only ports named loop and type software (filter{type: \'software\', description: \'lo\'})',function(done){
+		var arrayToVerify;	
+		findPorts(testIP, testCommunity).
+		then(function(ports){
+			arrayToVerify = ports.filter(function(e){
+				return /software/.test(e.type) && /lo/.test(e.description)
+			});
+			return findPorts(testIP, testCommunity, {type: 'software', description: 'lo'});
+		}).
+		then(function(ports){
+			_.isEqual(arrayToVerify,ports).should.be.true();
+			done();
+		});
+	});
 
 });
