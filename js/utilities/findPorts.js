@@ -7,6 +7,7 @@
 // }
 var snmp = require("snmp-native");
 var Promise = require("bluebird");
+var ipValidator = require("ip-address").Address4;
 
 var oid = {
 	ifaceID: '.1.3.6.1.2.1.2.2.1.1',
@@ -54,21 +55,27 @@ var interfaces = [];
 module.exports = function(ip, community, filter){
 
 	return new Promise(function(resolve, reject){
-		if(!(ip || community)) reject(Error('Too few arguments'));
-		else if(!(typeof(ip) === 'string' && typeof(community) === 'string')) {
-			reject(Error('Illegal first 2 arguments, must be of type \'string\''));
-	  }
+		if(!(ip && community)) return reject(Error('Too few arguments'));
+		else {
+			if(!(typeof(ip) === 'string' && typeof(community) === 'string')) 
+				return reject(Error('Illegal first 2 arguments, must be of type \'string\''));
+			else {
+				if(new ipValidator(ip).valid === false){
+					return reject(Error('Invalid IP address'));
+				}
+			}
+		}
 
 		var session = new snmp.Session({host: ip, community: community});
 		session.getSubtree({oid: oid.ifaceDescription}, function(err, vars){
-			if(err) reject(err);
+			if(err) return reject(err);
 			vars.forEach(function(ifdescr, index){
 				interfaces[index] = {}
 				interfaces[index].id = index + 1;
 				interfaces[index].description = ifdescr.value;
 			});
 			session.getSubtree({oid: oid.ifaceType}, function(err, vars){
-				if(err) reject(err);
+				if(err) return reject(err);
 				vars.forEach(function(iftype, index){
 					interfaces[index].type = ifaceTypeCodes[iftype.value * 1];
 				});
@@ -77,10 +84,10 @@ module.exports = function(ip, community, filter){
 
 					if(Object.keys(filter).find(function(e){return e === 'description' || e === 'type'})){
 						for (attr in filter){
-							if(!(typeof(filter[attr]) === 'string')) reject(Error('Filter attribute \'' + attr + '\' not of type \'string\', it is of type \'' + typeof(filter[attr]) +  '\' instead!'));
+							if(!(typeof(filter[attr]) === 'string')) return reject(Error('Filter attribute \'' + attr + '\' not of type \'string\', it is of type \'' + typeof(filter[attr]) +  '\' instead!'));
 						}
 					}
-					else reject(Error('Invalid filter object, has no attributes type or description'));
+					else return reject(Error('Invalid filter object, has no attributes type or description'));
 
 					filter.type =  new RegExp(filter.type);
 					filter.description =  new RegExp(filter.description);

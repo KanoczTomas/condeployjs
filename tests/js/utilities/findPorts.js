@@ -2,10 +2,10 @@ var should = require("should");
 var findPorts = require("../../../js/utilities/findPorts");
 var _ = require("underscore");
 
-var testIP = '192.168.2.1';
+var testIP = '127.0.0.1';
 var testCommunity = 'secret';
 
-describe('Tests for findPorts.js - in case tests are failing please make sure you have testIP and testCommunity variables set to a snmp host that is reachable!', function(){
+describe('findPorts.js: in case tests are failing please make sure you have testIP and testCommunity variables set to a snmp host that is reachable!', function(){
 	it('should return a promise', function(){
 		findPorts(testIP,testCommunity).should.be.a.Promise();
 	});
@@ -20,6 +20,13 @@ describe('Tests for findPorts.js - in case tests are failing please make sure yo
 		findPorts(testIP).should.be.rejected().
 		then(function(err){
 			err.should.be.Error()
+			done();
+		});
+	});
+	it('should validate IP and be rejected if 1st argument not a valid IPv4 address', function(done){
+		findPorts('10.10.10.888', testCommunity).should.be.rejected().
+		then(function(err){
+			err.should.be.Error();
 			done();
 		});
 	});

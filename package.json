@@ -4,7 +4,7 @@
   "description": "page helping with QoS deployment",
   "main": "server.js",
   "scripts": {
-    "test": "mocha tests/js/**/*.js",
+    "test": "mocha --recursive tests/",
     "watch": "watchify js/app.js --poll=1000 -o static/bundle.js -vvv",
     "build": "browserify js/app.js | uglifyjs -mc warnings=false > static/bundle.min.js",
     "start": "nodemon -w server.js"
@@ -32,11 +32,10 @@
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "extend": "^3.0.0",
+    "ip-address": "^5.8.0",
     "require-dir": "^0.3.0",
     "require-dir-all": "^0.4.9",
     "rest-interface": "^1.0.1",
-    "should": "^9.0.2",
-    "should-promised": "^0.3.1",
     "snmp-native": "^1.0.21",
     "uglify-js": "^2.6.4",
     "underscore": "^1.8.3"
