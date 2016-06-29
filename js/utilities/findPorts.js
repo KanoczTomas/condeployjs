@@ -66,6 +66,15 @@ module.exports = function(ip, community, filter){
 			}
 		}
 
+		if(filter){
+			if(Object.keys(filter).find(function(e){return e === 'description' || e === 'type'})){
+				for (attr in filter){
+					if(!(typeof(filter[attr]) === 'string')) return reject(Error('Filter attribute \'' + attr + '\' not of type \'string\', it is of type \'' + typeof(filter[attr]) +  '\' instead!'));
+				}
+			}
+			else return reject(Error('Invalid filter object, has no attributes type or description'));
+		}
+		
 		var session = new snmp.Session({host: ip, community: community});
 		session.getSubtree({oid: oid.ifaceDescription}, function(err, vars){
 			if(err) return reject(err);
@@ -82,12 +91,6 @@ module.exports = function(ip, community, filter){
 				session.close();
 				if(filter){
 
-					if(Object.keys(filter).find(function(e){return e === 'description' || e === 'type'})){
-						for (attr in filter){
-							if(!(typeof(filter[attr]) === 'string')) return reject(Error('Filter attribute \'' + attr + '\' not of type \'string\', it is of type \'' + typeof(filter[attr]) +  '\' instead!'));
-						}
-					}
-					else return reject(Error('Invalid filter object, has no attributes type or description'));
 
 					filter.type =  new RegExp(filter.type);
 					filter.description =  new RegExp(filter.description);
