@@ -45,6 +45,7 @@
     "debowerify": "^1.5.0",
     "morgan": "^1.7.0",
     "should": "^9.0.2",
+    "supertest": "^1.2.0",
     "uglify": "^0.1.5",
     "watchify": "^3.7.0"
   },

@@ -5,7 +5,7 @@ var _ = require("underscore");
 var testIP = '127.0.0.1';
 var testCommunity = 'secret';
 
-describe('findPorts.js: in case tests are failing please make sure you have testIP and testCommunity variables set to a snmp host that is reachable!', function(){
+describe('findPorts.js: in case tests are failing please make sure you have testIP and testCommunity variables set to a snmp host that is reachable!\n testIP = ' + testIP + '\n testCommunity = ' + testCommunity, function(){
 	it('should return a promise', function(){
 		findPorts(testIP,testCommunity).should.be.a.Promise();
 	});

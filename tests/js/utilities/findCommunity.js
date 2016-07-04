@@ -4,7 +4,7 @@ var findCommunity = require("../../../js/utilities/findCommunity");
 const testIP = '127.0.0.1';
 const testCommunities = ['jahoda', 'malina', 'secret' ];
 
-describe('findCommunity.js: in case all tests fail, make sure testIP points to a valid snmp enabled device and testCommunities has a working community', function(){
+describe('findCommunity.js: in case all tests fail, make sure testIP points to a valid snmp enabled device and testCommunities has a working community.\n testIP = ' + testIP + '\n testCommunities = [' + testCommunities + ']', function(){
 	it('should return a promise', function(){
 		findCommunity(testIP, testCommunities).should.be.a.Promise();
 	});
