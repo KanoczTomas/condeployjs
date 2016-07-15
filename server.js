@@ -6,7 +6,6 @@ var snmp = require("snmp-native");
 var bodyParser = require("body-parser");
 var apiResponse = require("./js/api/apiResponse");
 var extend = require("extend");
-var finder = require("./js/utilities/crawl.js");
 var resources = require("./js/api/resources");
 
 app.listen(config.port);
