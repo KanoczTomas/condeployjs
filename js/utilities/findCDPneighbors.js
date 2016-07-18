@@ -3,6 +3,7 @@ var fs = require('fs');
 var events = require('events');
 var Promise = require('bluebird');
 var async = require('async');
+var ipAddress = require("ip-address").Address4;
 Promise.promisifyAll(snmp);
 
 var oids = {
@@ -31,8 +32,9 @@ findCdpIndexes = function(ip, community){
         tmp.reverse();
         out.cdpIndexes.push("." + tmp.toString().replace(",","."));//as stringyfiying an array [1 , 3] returns "1,3" we need to change the "," to "."
       });
-      resolve(out.cdpIndexes);
-			session.close();
+			out.session = session;
+      resolve(out);//we return an object with the sessiin and indexes
+			//session.close();
     });
   });
   
@@ -46,56 +48,50 @@ findCdpIndexes.description = function(){/*
     and platform
 */}.toString().slice(14, -3);
 
-getCdpInformation = function(){
+getCdpInformation = function(ip, community){
+
   
-  var self = this;
-  self.output = "";
-
   return new Promise(function(resolve, reject){
-    console.log('neighbors for ' + self.hostname + '\n\n');
-    self.output += 'ip(hostname) of device polled,hostname of neighbor,local interface,IP address of neighbor,neighbor platform, neighbor port\n';
-    async.each(
-      self.cdpIndexes,
-      function(index, callback){
-        var tmp_oids = [ 
-          oids.cdpCacheDeviceId + index, 
-          oids.ifDescription + '.' + index.split(".")[1],
-          oids.cdpCacheAddress + index,
-          oids.cdpCachePlatform + index,
-          oids.cdpCacheDevicePort + index
-        ];
-        self.session.getAll({oids:tmp_oids}, function (err, varbinds){
-          if(err) callback(err);
-          else{
-            //console.log('hostname:' + varbinds[0].value);
-            //console.log('interface: ' + varbinds[1].value);
-            //var ip = varbinds[2].valueHex.slice(0,8);
-	    //ip = parseInt(ip.substr(0,2),16) + '.' + parseInt(ip.substr(2,2),16) + '.' + parseInt(ip.substr(4,2),16) + '.' + parseInt(ip.substr(6,2),16);
-	    //console.log('IP address: ' + ip);
-            //console.log('platform: ' + varbinds[3].value);
-            //console.log('neighbor port: ' + varbinds[4].value);
+		findCdpIndexes(ip, community).
+		then(function(obj){
+			var cdpIndexes = obj.cdpIndexes;
+			var session = obj.session;
+			var output = [];
+      async.each(
+        cdpIndexes,
+        function(index, callback){
+          var tmp_oids = [ 
+            oids.cdpCacheDeviceId + index, 
+            oids.ifDescription + '.' + index.split(".")[1],
+            oids.cdpCacheAddress + index,
+            oids.cdpCachePlatform + index,
+            oids.cdpCacheDevicePort + index
+          ];
+          session.getAll({oids:tmp_oids}, function (err, varbinds){
+            if(err) callback(err);
+            else{
 
-            self.output += self.ip + '(' + self.hostname + '),';
-            self.output += varbinds[0].value + ',';
-            self.output += varbinds[1].value  + ',';
-            var ip = varbinds[2].valueHex.slice(0,8);
-	    ip = parseInt(ip.substr(0,2),16) + '.' + parseInt(ip.substr(2,2),16) + '.' + parseInt(ip.substr(4,2),16) + '.' + parseInt(ip.substr(6,2),16);
-	    self.output += ip  + ',';
-            self.output += varbinds[3].value  + ',';
-            self.output += varbinds[4].value  + '\n';
-//	    console.log(self.output);
-	    callback();
-          }
-        });
-      },
-      function(err){
-        if(err) reject(err);
-	else resolve();
-      }
-    );
-  });
+							var device = {};
+							device.hostname = varbinds[0].value;
+							device.localPort = varbinds[1].value;
+							device.ip = ipAddress.fromHex(varbinds[2].valueHex).address;
+							device.platform = varbinds[3].value;
+							device.remotePort = varbinds[4].value;
+							output.push(device);
+	      			callback();
+            }
+          });
+        },
+        function(err){
+          if(err) return reject(err);
+	  			else resolve(output);
+        }
+      );
+    });
+	});
 };
 
 module.exports = {
-	findCdpIndexes: findCdpIndexes
+	findCDPindexes: findCdpIndexes,
+	getCDPinformation: getCdpInformation
 }

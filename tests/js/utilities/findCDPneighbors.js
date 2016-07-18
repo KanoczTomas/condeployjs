@@ -13,6 +13,6 @@ describe('findCDPneighbors.js: in case tests are failing please make sure you ha
 	it('it should be rejected if 2nd argument not a string');
 	it('it should be rejected if wrong community supplied');
 	it('it should return an object once resolved');
-	it('it should close snmp session once finished');
+	it('it should cspindexes should return an array and sezsion object');
 
 });
