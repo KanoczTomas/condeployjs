@@ -20,6 +20,7 @@ describe('findPorts.js: in case tests are failing please make sure you have test
 		findPorts(testIP).should.be.rejected().
 		then(function(err){
 			err.should.be.Error()
+			console.error(err);
 			done();
 		});
 	});
@@ -27,6 +28,7 @@ describe('findPorts.js: in case tests are failing please make sure you have test
 		findPorts('10.10.10.888', testCommunity).should.be.rejected().
 		then(function(err){
 			err.should.be.Error();
+			console.error(err);
 			done();
 		});
 	});
@@ -34,6 +36,7 @@ describe('findPorts.js: in case tests are failing please make sure you have test
 		findPorts(testIP,3).should.be.rejected().
 		then(function(err){
 			err.should.be.Error();
+			console.error(err);
 			done()
 		});
 	});
@@ -47,6 +50,7 @@ describe('findPorts.js: in case tests are failing please make sure you have test
 		findPorts(testIP,testCommunity,{test:'test'}).should.be.rejected().
 		then(function(err){
 			err.should.be.Error();
+			console.error(err);
 			done();
 		});
 	});
@@ -54,6 +58,7 @@ describe('findPorts.js: in case tests are failing please make sure you have test
 		findPorts(testIP, testCommunity,{type:3}).should.be.rejected().
 		then(function(err){
 			err.should.be.Error();
+			console.error(err);
 			done();
 		});
 	});
@@ -61,6 +66,7 @@ describe('findPorts.js: in case tests are failing please make sure you have test
 		findPorts(testIP, testCommunity, {description: 3}).should.be.rejected().
 		then(function(err){
 			err.should.be.Error();
+			console.error(err);
 			done();
 		});
 	});

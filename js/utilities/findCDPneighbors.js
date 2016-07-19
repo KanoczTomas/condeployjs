@@ -1,10 +1,27 @@
-var snmp = require('snmp-native');
-var fs = require('fs');
-var events = require('events');
+//returns an object that has 2 properties:
+//findCDPindexes(ip, community) - exported only due to tests, not used directly
+// ip - ip address
+// community - community string
+// returns promise which resolves to:
+// [
+//  cdpIndexes - array of cdp indexes,
+//  session - snpm session object
+// ]
+//getCDPinformation(ip, community)
+// ip - ip address
+// community - community string
+// returns promise which resolves to:
+// {
+//  hostname: - hostname of neighbor device ,
+//  localPort: - local port where the neighbor is connected to,
+//  ip: - ip of neighbor,
+//  platform: - neighbor platform,
+//  remotePort: - port of neighbor device we are connected to 
+// }
 var Promise = require('bluebird');
+var snmp = require('snmp-native');
 var async = require('async');
 var ipAddress = require("ip-address").Address4;
-Promise.promisifyAll(snmp);
 
 var oids = {
   cdpCacheDeviceId: '.1.3.6.1.4.1.9.9.23.1.2.1.1.6',
@@ -15,11 +32,17 @@ var oids = {
   ifDescription: '.1.3.6.1.2.1.2.2.1.2' //contains interface name of the device queried
 };
 
-findCdpIndexes = function(ip, community){
+findCDPindexes = function(ip, community){ //helper function - exported only to be able to test
+
 
   var out = {};
 
   return new  Promise(function(resolve, reject){
+		if(!(ip && community)) return reject(Error('Too few arguments!'));
+		if(new ipAddress(ip).valid === false) return reject(Error('IP (' + ip + ') not valid!'));
+		if(community === '') return reject(Error('No community given'));
+		if(typeof(community) !== 'string') return reject(Error('Community must be a string'));
+
     var session = new snmp.Session({host:ip, community:community});
 		out.cdpIndexes = [];
 
@@ -40,7 +63,7 @@ findCdpIndexes = function(ip, community){
   
 };
 
-findCdpIndexes.description = function(){/*
+findCDPindexes.description = function(){/*
     This method returns a promise. It simply goes through
     the cdp table, and findes the last 2 indexes, assigns then
     as an array of indexes to the object, later it can be used
@@ -48,11 +71,17 @@ findCdpIndexes.description = function(){/*
     and platform
 */}.toString().slice(14, -3);
 
-getCdpInformation = function(ip, community){
+getCDPinformation = function(ip, community){
 
-  
+
   return new Promise(function(resolve, reject){
-		findCdpIndexes(ip, community).
+
+		if(!(ip && community)) return reject(Error('Too few arguments!'));
+		if(new ipAddress(ip).valid === false) return reject(Error('IP (' + ip + ') not valid!'));
+		if(community === '') return reject(Error('No community given'));
+		if(typeof(community) !== 'string') return reject(Error('Community must be a string'));
+
+		findCDPindexes(ip, community).
 		then(function(obj){
 			var cdpIndexes = obj.cdpIndexes;
 			var session = obj.session;
@@ -70,7 +99,6 @@ getCdpInformation = function(ip, community){
           session.getAll({oids:tmp_oids}, function (err, varbinds){
             if(err) callback(err);
             else{
-
 							var device = {};
 							device.hostname = varbinds[0].value;
 							device.localPort = varbinds[1].value;
@@ -92,6 +120,6 @@ getCdpInformation = function(ip, community){
 };
 
 module.exports = {
-	findCDPindexes: findCdpIndexes,
-	getCDPinformation: getCdpInformation
+	findCDPindexes: findCDPindexes,
+	getCDPinformation: getCDPinformation
 }

@@ -24,10 +24,10 @@ module.exports = function(ip,communities) { //this method is a promise
   return new Promise(function (resolve, reject){
 		if(!(ip && communities)) return reject(Error('Too few arguments'));
 		else{
-			if(!(typeof(ip) === 'string' && Array.isArray(communities)))return reject(Error('1st aegument must be a steing, second a non empty array'));
+			if(!(typeof(ip) === 'string' && Array.isArray(communities)))return reject(Error('1st argument must be a string, second a non empty array'));
 			else{
 				if(_.isEqual(communities, [])) return reject(Error('2nd argument must be a non empty list'));
-				if(new ipValidator(ip).valid === false) return reject(Error('1st argument nit a valid IP'));
+				if(new ipValidator(ip).valid === false) return reject(Error('1st argument not a valid IP'));
 			}
 		}
 

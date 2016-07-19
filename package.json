@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha --recursive tests/",
+		"current": "mocha tests/js/utilities/findCDPneighbors.js",
     "watch": "watchify js/app.js --poll=1000 -o static/bundle.js -vvv",
     "build": "browserify js/app.js | uglifyjs -mc warnings=false > static/bundle.min.js",
     "start": "nodemon -w server.js"

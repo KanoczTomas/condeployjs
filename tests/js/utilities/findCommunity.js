@@ -18,6 +18,7 @@ describe('findCommunity.js: in case all tests fail, make sure testIP points to a
 		findCommunity('10.10.10.888', testCommunities).should.be.rejected().
 		then(function(err){
 			err.should.be.Error();
+			console.error(err);
 			done();
 		});
 	});
@@ -25,6 +26,7 @@ describe('findCommunity.js: in case all tests fail, make sure testIP points to a
 		findCommunity(testIP, 'test').should.be.rejected().
 		then(function(err){
 			err.should.be.Error();
+			console.error(err);
 			done()
 		});
 	});
@@ -32,6 +34,7 @@ describe('findCommunity.js: in case all tests fail, make sure testIP points to a
 		findCommunity(testIP, []).should.be.rejected().
 		then(function(err){
 			err.should.be.Error();
+			console.error(err);
 			done();
 		});
 	});
