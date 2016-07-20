@@ -73,8 +73,8 @@ findCDPindexes.description = function(){/*
 
 getCDPinformation = function(ip, community){
 
-
-  return new Promise(function(resolve, reject){
+	var test_helper = '';
+  var return_ =  new Promise(function(resolve, reject){
 
 		if(!(ip && community)) return reject(Error('Too few arguments!'));
 		if(new ipAddress(ip).valid === false) return reject(Error('IP (' + ip + ') not valid!'));
@@ -85,6 +85,7 @@ getCDPinformation = function(ip, community){
 		then(function(obj){
 			var cdpIndexes = obj.cdpIndexes;
 			var session = obj.session;
+			test_helper = obj.session; //we make session object accessible for testing by attaching it to the promise
 			var output = [];
       async.each(
         cdpIndexes,
@@ -112,11 +113,17 @@ getCDPinformation = function(ip, community){
         },
         function(err){
           if(err) return reject(err);
-	  			else resolve(output);
+	  			else {
+						return_.session = test_helper;
+						session.close();
+						resolve(output);
+					}
         }
       );
     });
 	});
+
+	return return_;
 };
 
 module.exports = {

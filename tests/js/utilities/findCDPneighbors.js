@@ -105,5 +105,13 @@ describe('findCDPneighbors.js: in case tests are failing please make sure you ha
 				done();
 			});
 		});
+		it('it should close the snmp session once finished', function(done){
+		 var t = getCDPinformation(testIP, testCommunity);
+		 t.should.be.fulfilled().
+		 then(function(out){
+		 	(t.session.socket === undefined).should.be.true();
+			done();
+		 });
+		})
 	});
 });
